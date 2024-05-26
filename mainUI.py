@@ -109,7 +109,6 @@ def GenKeySrc(master: Frame) -> None:
     gen_key_button = create_button_with_rounded_corners(master, "Tạo khóa", GenKeyBtnClicked, 200, 40, 10, '#2196F3')
     gen_key_button.pack()
 
-
 def create_rounded_rectangle_image(width, height, radius, color):
     image = Image.new("RGBA", (width, height), (255, 0, 0, 0))
     draw = ImageDraw.Draw(image)
