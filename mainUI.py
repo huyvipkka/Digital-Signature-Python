@@ -4,6 +4,7 @@ from Crypto.PublicKey import RSA
 from PIL import Image, ImageDraw, ImageTk
 from DigitalSignatures import RSASign, RSAVerify
 from ReadFileDocx import read_docx
+import os
 
 check = None
 signature = None
@@ -28,11 +29,14 @@ def SignBtnClicked(root_file_entry: tkinter.Entry, private_entry: tkinter.Entry)
 
         global signature
         signature = RSASign(data, private_key)
-        with open(root_url + ".sig", "wb") as f:
+        sign_file_name = os.path.basename(root_url) + ".sig"
+        with open(sign_file_name, "wb") as f:
             f.write(signature)
         messagebox.showinfo("Thành công", "Kí thành công")
-    except:
-        messagebox.showerror("Lỗi", f"không thể đọc file")
+    except TypeError:
+        messagebox.showerror("Lỗi", f"Key được chọn phải là private key")
+    except FileNotFoundError:
+        messagebox.showerror("Lỗi", f"Không tìm thấy file")
 
 def VerifyBtnClicked(check_file_entry: tkinter.Entry, sign_file_entry: tkinter.Entry, public_key_entry: tkinter.Entry) -> None:
     check_url = check_file_entry.get()
@@ -48,14 +52,17 @@ def VerifyBtnClicked(check_file_entry: tkinter.Entry, sign_file_entry: tkinter.E
             public_key = RSA.import_key(f.read())
         with open(sign_url, "rb") as f:
             signature = f.read()
-
+        if public_key.has_private():
+            messagebox.showerror("Lỗi", "Key được chọn phải là public key")
+            return
+        
         global check
         check = RSAVerify(data, signature, public_key)
         if check:
             messagebox.showinfo("Thành công", "Chữ ký hợp lệ\nVăn bản chính xác")
         else:
             messagebox.showerror("Thất bại", "Chữ ký không hợp lệ\nVăn bản đã bị chỉnh sửa")
-    except:
+    except FileNotFoundError:
         messagebox.showerror("Lỗi", f"Không thể đọc file")
 
 def GenKeyBtnClicked() -> None:
