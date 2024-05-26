@@ -15,7 +15,6 @@ def BrowseFileBtnClicked(file_entry: tkinter.Entry) -> None:
         file_entry.insert(0, file_path)
 
 def SignBtnClicked(root_file_entry: tkinter.Entry, private_entry: tkinter.Entry) -> None:
-    
     root_url = root_file_entry.get()
     private_url = private_entry.get()
     try:
